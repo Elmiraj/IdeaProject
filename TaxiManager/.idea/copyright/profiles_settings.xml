@@ -1,0 +1,8 @@
+<component name="CopyrightManager">
+  <settings>
+    <LanguageOptions name="JAVA">
+      <option name="lenBefore" value="2" />
+      <option name="lenAfter" value="2" />
+    </LanguageOptions>
+  </settings>
+</component>
