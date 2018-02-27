@@ -11,17 +11,19 @@ import javax.swing.JFrame;
 
 //计算机程序的图形界面，计算加减乘除，可以有小括号，数字可以为小数
 
-/*
- * @Author: Zhang Jun
- * @Date: 2018/2/25
- * */
+/* *
+ * CalcGui class
+ *
+ * @author: Zhang Jun
+ * @date: 2018/2/25
+ */
 
-public class CalcGUI extends JFrame {
+public class CalcGui extends JFrame {
 
     private static final long serialVersionUID = 1L;
     private TreeNode resultTree;
     private String textFieldString;
-    private boolean CalcSuccess = true;
+    private boolean calcSuccess = true;
     private char ops[][] = {
             {'>', '>', '<', '<', '<', '>', '>'},
 
@@ -38,15 +40,15 @@ public class CalcGUI extends JFrame {
             {'<', '<', '<', '<', '<', 'E', '='},
     };
 
-    Stack<TreeNode> nodeStack = new Stack<TreeNode>();
-    Stack<Character> opStack = new Stack<Character>();
+    private Stack<TreeNode> nodeStack = new Stack<>();
+    private Stack<Character> opStack = new Stack<>();
 
     public static void main(String[] args) {
-        CalcGUI gui = new CalcGUI();
+        CalcGui gui = new CalcGui();
         gui.userGUI();
     }
 
-    public void userGUI(){
+    private void userGUI(){
         this.setLayout(new BorderLayout());
         TextField tf = new TextField("请输入表达式，按Enter开始计算",40);
         tf.selectAll();
@@ -56,15 +58,15 @@ public class CalcGUI extends JFrame {
             public void keyPressed(KeyEvent e) {
                 if(e.getKeyCode() == KeyEvent.VK_ENTER){
                     textFieldString = ((TextField)e.getComponent()).getText();
-                    CalcSuccess = true;
+                    calcSuccess = true;
                     resultTree = null;
                     try{
                         resultTree = calc(textFieldString + "#");
                     }catch (Exception e1){
-                        CalcSuccess = false;
+                        calcSuccess = false;
                     }
 
-                    CalcGUI.this.repaint();
+                    CalcGui.this.repaint();
                 }
             }
         });
@@ -81,7 +83,7 @@ public class CalcGUI extends JFrame {
     @Override
     public void paint(Graphics g){
         super.paint(g);
-        if(CalcSuccess){
+        if(calcSuccess){
             if(resultTree != null){
                 g.drawString("计算结果为：" + resultTree.value,10,80);
                 int rootBeginX = this.getWidth()/2;
@@ -96,9 +98,10 @@ public class CalcGUI extends JFrame {
     }
 
     private void drawTree(Graphics g,TreeNode node, Point pme, int width, Point pfather){
-        if(node == null)return;
+        if (node == null){
+            return;
+        }
         g.setColor(Color.GREEN);
-        //this.drawCircle(g,pme,diameter/2);
         g.drawLine(pme.x,pme.y,pfather.x,pfather.y);
         if(node.op != 'E'){
             g.setColor(Color.BLACK);
@@ -112,27 +115,28 @@ public class CalcGUI extends JFrame {
         drawTree(g,node.rt,new Point(pme.x + width/2,pme.y + levelHeight), width/2, pme);
     }
 
-    public TreeNode calc(String inStr) throws Exception{
+    private TreeNode calc(String inStr) throws Exception{
         opStack.push('#');
         StringBuilder buf = new StringBuilder();
         int i = 0;
         while(i < inStr.length()){
             if(Character.isDigit(inStr.charAt(i)) || inStr.charAt(i) == '.'){
                 buf.delete(0, buf.length());
-                while (i < inStr.length() && (Character.isDigit(inStr.charAt(i)) || inStr.charAt(i) == '.'))
+                while (i < inStr.length() && (Character.isDigit(inStr.charAt(i)) || inStr.charAt(i) == '.')){
                     buf.append(inStr.charAt(i++));
+                }
                 Double number = Double.parseDouble(buf.toString());
                 nodeStack.push(new TreeNode(number));
             }else if(inStr.charAt(i) == ' '){
                 i++;
-                continue;
             }else {
                 char op = inStr.charAt(i);
                 int subNew = getSub(op);
                 boolean goOn = true;
                 while (goOn){
-                    if(opStack.isEmpty())
+                    if(opStack.isEmpty()) {
                         throw new Exception("运算符太少了！");
+                    }
                     char opFormer = opStack.peek();
                     int subFormer = getSub(opFormer);
                     switch (ops[subFormer][subNew]){
@@ -215,12 +219,15 @@ class TreeNode{
     }
 
     private void out(TreeNode node){
-        if(node == null) return;
+        if(node == null) {
+            return;
+        }
         out(node.lft);
-        if(node.op != 'E')
+        if(node.op != 'E') {
             buf.append(node.op);
-        else
+        } else {
             buf.append(node.value);
+        }
         out(node.rt);
     }
 }
