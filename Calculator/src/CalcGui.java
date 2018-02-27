@@ -10,14 +10,12 @@ import java.util.Stack;
 import javax.swing.JFrame;
 
 //计算机程序的图形界面，计算加减乘除，可以有小括号，数字可以为小数
-
-/* *
+/**
  * CalcGui class
  *
- * @author: Zhang Jun
- * @date: 2018/2/25
+ * @author Jun Zhang
+ * @date 2018/2/27
  */
-
 public class CalcGui extends JFrame {
 
     private static final long serialVersionUID = 1L;
